@@ -33,7 +33,6 @@ public class KafkaTopicConfig {
         return TopicBuilder.name("yongwook")
                 .partitions(1)
                 .replicas(1)
-                .compact()
                 .build();
     }
 
@@ -42,7 +41,6 @@ public class KafkaTopicConfig {
         return TopicBuilder.name("user")
                 .partitions(1)
                 .replicas(1)
-                .compact()
                 .build();
     }
 }

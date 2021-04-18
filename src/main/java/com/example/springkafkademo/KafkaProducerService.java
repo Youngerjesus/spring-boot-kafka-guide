@@ -71,10 +71,31 @@ public class KafkaProducerService {
     public void sendUser(String username, int age) {
         logger.info(String.format("#### -> Producing user -> %s", username));
 
-        ListenableFuture<SendResult<String, User>> future = this.userKafkaTemplate.send(USER_TOPIC, "user", new User(username, age));
+        ListenableFuture<SendResult<String, User>> future = this.userKafkaTemplate.send(USER_TOPIC, new User(username, age));
+
+        future.addCallback(new ListenableFutureCallback<SendResult<String, User>>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+
+            }
+
+            @Override
+            public void onSuccess(SendResult<String, User> stringUserSendResult) {
+
+            }
+        });
     }
 
     public void sendUsers(){
+        logger.info(String.format("#### -> Producing users ####"));
+        IntStream.rangeClosed(1, 100).forEach(i -> {
+            this.userKafkaTemplate.send(USER_TOPIC, new User("BatchUser", i));
+        });
+    }
+
+    public void sendUsersUsingKey(String username, int age){
+        logger.info(String.format("#### -> Producing user -> %s", username));
+
         logger.info(String.format("#### -> Producing users ####"));
         IntStream.rangeClosed(1, 100).forEach(i -> {
             this.userKafkaTemplate.send(USER_TOPIC, "user", new User("BatchUser", i));

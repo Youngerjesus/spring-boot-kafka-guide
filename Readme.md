@@ -5,32 +5,23 @@
 
 Spring에서 Apache Kafka를 효율적으로 사용하는 방법에 대해 정리합니다. 
 
-여기서 Kafka는 직접 설치하지 않고 컨테이너를 기반으로 실행시킵니다. 
+여기서 Kafka는 직접 설치하지 않고 컨테이너를 통해 실행시킵니다. 
 
-Kafka에 대한 정의는 다음과 같다.
+Kafka에 대한 정의는 다음과 같습니다.
 
 > Apache Kafka is an open-source distributed event streaming platform used by thousands of companies for high-performance data pipelines, streaming analytics, data integration, and mission-critical applications.
 
-카프카는 기본적으로 메시징 서버로 동작한다. 
+카프카는 기본적으로 메시징 서버로 동작합니다. 
 
-따라서 카파카의 동작 방식을 설명하기 전에 메시징 시스템에 대해 좀 알아보자면 메시지라고 불리는 데이터 단위를 보내는 측 Producer에서 카프카에 토픽이라는 각각의 메시지 저장소에 데이터를 저장하면 가져가는 측 Consumer가 원하는 토픽에서 데이터를 가져가게 되어있다.
+따라서 카파카의 동작 방식을 설명하기 전에 메시징 시스템에 대해 좀 알아보자면 메시지라고 불리는 데이터 단위를 보내는 측 Producer에서 카프카에 토픽이라는 각각의 메시지 저장소에 데이터를 저장하면 
+
+가져가는 측 Consumer가 원하는 토픽에서 데이터를 가져가게 되어있습니다. 
 
 중앙에 메시징 시스템 서버를 두고 이렇게 메시지를 보내고 받는 형태의 통신을 Pub/Sub 모델이라고 한다.
 
 
 *** 
 
-### Pub-Sub 모델
-카프카는 pub-sub(발행/구독) 모델을 사용하기 때문에, 발행/구독모델이 뭔지 알아보자. 
-
-pub-sub은 메세지를 특정 수신자에게 직접적으로 보내주는 시스템이 아니다. 
-
-publisher는 메세지를 topic을 통해서 카테고리화 한다. 분류된 메세지를 받기를 원하는 receiver는 그 해당 topic을 구독(subscribe)함으로써 메세지를 읽어 올 수 있다. 
-
-즉, publisher는 topic에 대한 정보만 알고 있고, 마찬가지로 subscriber도 topic만 바라본다. 
-
-
-***
 
 ## Kafka Cluster
 
@@ -41,7 +32,6 @@ Kafka 클러스터는 하나 이상의 Broker로 구성된다. 주로 하는 역
 Producer로 부터 들어온 메시지를 저장하고 Cosumer가 이 메시지를 topic 별로 각 patition에서 offset을 기준으로 fetch 할 수 있도록 한다. 
 
 이중화를 하고 장애에 대응하는 역할도 한다. 
-
 
 
 #### Zookeeper Cluster
@@ -134,7 +124,7 @@ Container에 접속 후 /opt/kafka/bin 경로에 카프카 shell script 있음 (
 
 브로커에선 파티션 하나에 대한 데이터를 한 파일에다가 저장하는게 아니라 `segment`  로 나눠서 저장을 한다. 
 
-`Segment` 파일은 `*.index` `*.timeIndex` `*.log` `*.snapshot` 과 같이 있다. 
+`segment` 파일은 `*.index` `*.timeIndex` `*.log` `*.snapshot` 과 같이 있다. 
 
 `*.log` 파일에 실제로 데이터가 저장이 된다. 그리고 오프셋을 검색하기 위한 데이터가 `*.index` `*.timeIndex` 이런 파일이 있는 것
 
@@ -149,7 +139,7 @@ Container에 접속 후 /opt/kafka/bin 경로에 카프카 shell script 있음 (
 
 카프카의 기본 옵션 중 일부만 미리 변경해서 사용한다면 카프카 운영을 보다 안정적으로 사용할 수 있다. 
 
-이 설정들에 대해 조금 알아볼건데 여기서는 docker-compose.yml 파일에 이 값들을 넣으면 된다. 
+이 설정들에 대해 조금 알아보
 
 #### log.retention.hours=72
 
