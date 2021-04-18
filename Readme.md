@@ -32,13 +32,9 @@ publisher는 메세지를 topic을 통해서 카테고리화 한다. 분류된 �
 
 ***
 
-## Kafka Cluster Using Docker Container 
-
-### Kafka Cluster 
+## Kafka Cluster
 
 Kafka 클러스터는 하나 이상의 Broker로 구성된다. 주로 하는 역할은 Broker의 Controller로서 역할을 한다. 
-
-
 
 #### Broker 
 
@@ -76,6 +72,7 @@ Consumer는 Consumer Group에 속해서 topic을 subscribe 하고 해당 topic�
 메세지의 상대적인 위치를 나타내는게 offset이다. 배열에서의 index를 생각하면 된다. 
 
 ***
+## Kafka Docker Container 
 
 ### Pre-Requisites
 
@@ -148,7 +145,7 @@ Container에 접속 후 /opt/kafka/bin 경로에 카프카 shell script 있음 (
 ***
 
   
-### Kafka 주요 설정
+## Kafka Cluster 주요 설정
 
 카프카의 기본 옵션 중 일부만 미리 변경해서 사용한다면 카프카 운영을 보다 안정적으로 사용할 수 있다. 
 
