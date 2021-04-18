@@ -101,7 +101,7 @@ Container에 접속 후 /opt/kafka/bin 경로에 카프카 shell script 있음 (
   - 전체 그룹 조회
     -  ./kafka-consumer-groups.sh --bootstrap-server localhost:9092 --list
   -  특정 그룹 디테일 조회 
-- __server.properties __ 
+- __server.properties__ 
   - kafka cluster 설정을 보는 것 
   - cd /opt/kafka/config/server.properties
 
