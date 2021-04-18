@@ -11,6 +11,24 @@ Kafka에 대한 정의는 다음과 같다.
 
 > Apache Kafka is an open-source distributed event streaming platform used by thousands of companies for high-performance data pipelines, streaming analytics, data integration, and mission-critical applications.
 
+카프카는 기본적으로 메시징 서버로 동작한다. 
+
+따라서 카파카의 동작 방식을 설명하기 전에 메시징 시스템에 대해 좀 알아보자면 메시지라고 불리는 데이터 단위를 보내는 측 Producer에서 카프카에 토픽이라는 각각의 메시지 저장소에 데이터를 저장하면 가져가는 측 Consumer가 원하는 토픽에서 데이터를 가져가게 되어있다.
+
+중앙에 메시징 시스템 서버를 두고 이렇게 메시지를 보내고 받는 형태의 통신을 Pub/Sub 모델이라고 한다.
+
+
+*** 
+
+### Pub-Sub 모델
+카프카는 pub-sub(발행/구독) 모델을 사용하기 때문에, 발행/구독모델이 뭔지 알아보자. 
+
+pub-sub은 메세지를 특정 수신자에게 직접적으로 보내주는 시스템이 아니다. 
+
+publisher는 메세지를 topic을 통해서 카테고리화 한다. 분류된 메세지를 받기를 원하는 receiver는 그 해당 topic을 구독(subscribe)함으로써 메세지를 읽어 올 수 있다. 
+
+즉, publisher는 topic에 대한 정보만 알고 있고, 마찬가지로 subscriber도 topic만 바라본다. 
+
 
 ***
 
@@ -44,10 +62,18 @@ Zookeeper는 분산 시스템에서 서비스 동기화와 naming registry를 �
 데이터 스트림을 생산하는 역할을 producer가 합니다. 토큰 또는 메시지를 생성하고 이를 Kafka 클러스터의 하나 이상의 topic에 추가로 append 하기 위해 Apache Kafka Producer를 사용합니다
 
 
-
 #### Consumer 
 
 Consumer는 Consumer Group에 속해서 topic을 subscribe 하고 해당 topic에 있는 partition에 데이터가 들어있다면 그 데이터를 가지고 오는 역할을 합니다. 
+
+
+#### Topic과 partition
+
+카프카에서 Producer가 보내는 메세지는 topic으로 분류되고, topic은 여러개의 파티션으로 나눠 질 수 있다. 
+
+파티션내의 한 칸은 로그라고 불린다. 데이터는 한 칸의 로그에 순차적으로 append된다. 
+
+메세지의 상대적인 위치를 나타내는게 offset이다. 배열에서의 index를 생각하면 된다. 
 
 ***
 
@@ -178,6 +204,14 @@ retention 시간 값을 정확히 72로 고정시킨 이유는 일의 라이프 
 
 ## Kafka Producer 
 
+Producer는 메세지를 생산하는 주체이다. 
+
+메세지를 만들고 Topic에 메세지를 쓴다. 
+
+Producer는 Consumer의 존재를 알지 못하고 그냥 카프카에 메세지를 쓴다. 
+
+만약에 여러개의 토픽에 여러개의 파티션을 나누고, 특정 메세지들을 분류해서 특정 파티션에 저장하고 싶다면, key 값을 통해서 분류해서 넣을 수 있다. 
+
 Kafka Producer 노드의 구조에는 `Accumulator` 와 `Network Thread` 를 가지고 있다.
 
 `Accumulator` 는 데이터를 `broker`에 보내는 `send()` 메소드를 호출할 때 레코드를 메모리에 쌓아두는 역할을 한다
@@ -189,7 +223,7 @@ Kafka Producer 노드의 구조에는 `Accumulator` 와 `Network Thread` 를 가
  
 `Accumulator` 에서 `record` 를 총 쌓을 수 있는 공간이  `buffer.memory` 이다. 
 
-Spring Kafka에서 데이터를 보낼 땐 `KafkaTemplate` 을 이용해서 보내면 된다. 
+Spring Kafka에서 데이터를 보낼 땐 `KafkaTemplate` 을 이용해서 보내면 된다.
 
 추상화를 잟 해놔서 데이터를 보낼 때 동기식으로 보낼지 비동기식으로 보낼지 결정하지 않아도 된다.  
 
@@ -257,6 +291,11 @@ acks는 acknowledgments의 약자로 사전에서 찾아 보면 "승인"이라�
 ***
 
 ## Kafka Consumer 
+Consumer는 소비자로써 메세지를 소비하는 주체이다. 
+
+Producer의 존재를 모르지만 해당 topic을 구독함으로써, 자기가 처리할 수 있는 량을 스스로 조절해가면서 소비할 수 있다. 
+
+소비를 했다는 표시는 해당 topic내의 각 파티션에 존재하는 offset의 위치를 통해서 이전에 소비했던 offset 위치를 기억하고 관리하고 이를 통해서, 혹시나 Consumer가 죽었다가 다시 살아나도, 전에 마지막으로 읽었던 위치에서 부터 다시 읽어들일 수 있다.
 
 Consumer의 내부에는 `fetcher` 와 `Coordinator` 가 있다.
  
