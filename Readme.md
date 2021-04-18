@@ -49,6 +49,7 @@ Zookeeper는 분산 시스템에서 서비스 동기화와 naming registry를 �
 
 Consumer는 Consumer Group에 속해서 topic을 subscribe 하고 해당 topic에 있는 partition에 데이터가 들어있다면 그 데이터를 가지고 오는 역할을 합니다. 
 
+***
 
 ### Pre-Requisites
 
@@ -76,6 +77,8 @@ $ docker compose down
 $ docker exec -it kafka bash 
 ```
 
+***
+
 ### Kafka Shell Script 
 
 Container에 접속 후 /opt/kafka/bin 경로에 카프카 shell script 있음 (wurstmeister/kafka 이미지 기준)
@@ -102,6 +105,8 @@ Container에 접속 후 /opt/kafka/bin 경로에 카프카 shell script 있음 (
   - kafka cluster 설정을 보는 것 
   - cd /opt/kafka/config/server.properties
 
+***
+
 ### Kafka Broker
 
 브로커에선 파티션 하나에 대한 데이터를 한 파일에다가 저장하는게 아니라 `segment`  로 나눠서 저장을 한다. 
@@ -113,6 +118,8 @@ Container에 접속 후 /opt/kafka/bin 경로에 카프카 shell script 있음 (
 `*.timeIndex` 파일에는 `*.index` 파일에다가 저장 시간이 기록된 거. 
 
 `*.index` 피일에는 `offset` 과 `position` 정보가 들어간다. 
+
+***
 
   
 ### Kafka 주요 설정
@@ -188,6 +195,7 @@ Spring Kafka에서 데이터를 보낼 땐 `KafkaTemplate` 을 이용해서 보�
 
 `KafkaTemplate` 에서는 데이터를 보낸 후 성공적으로 보냈는지 결과를 받을 수 있는데 `ListenableFuture` 의 결과로 받을 수 있다. 
 
+***
 
 ### Producer 에서 고려할 사항 
 
@@ -257,6 +265,8 @@ Consumer의 내부에는 `fetcher` 와 `Coordinator` 가 있다.
 `coordinator` 는 어떤 토픽과 파티션을 가지고 올 지 `Broker` 와 통신하는 역할을 한다. 
 
 `max.poll.records` 로 `poll()` 메소드를 실행시켰을 때 가지고올 수 있는 최대 레코드 수를 결정할 수 있다. 
+
+***
 
 ### Consumer 에서 고려할 사항 
 
