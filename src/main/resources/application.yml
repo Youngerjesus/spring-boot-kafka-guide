@@ -1,0 +1,6 @@
+server:
+  port: 8080
+  shutdown: graceful
+
+kafka:
+  bootstrapAddress: localhost:9092
