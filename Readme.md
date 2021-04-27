@@ -1,4 +1,4 @@
-# Using Spring for Apache Kafka
+# Spring Boot Kafka Guide
 
 ***
 
