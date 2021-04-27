@@ -1,6 +1,18 @@
 # Using Spring for Apache Kafka
 
 ***
+
+## 목차
+[1. Intro](#Intro) <br/>
+[2. Kafka Cluster](#Kafka-Cluster) <br/>
+[3. Kafka Docker Container](#Kafka-Docker-Container) <br/>
+[4. Kafka Cluster 주요 설정](#Kafka-Cluster-주요-설정) <br/>
+[5. Kafka Producer](#Kafka-Producer) <br/> 
+[6. Producer 에서 고려할 사항](#Producer-에서-고려할-사항) <br/>
+[7. Kafka Consumer](#Kafka-Consumer) <br/>
+[8. Consumer 에서 고려할 사항](#Consumer-에서-고려할-사항) <br/>
+
+***
 ## Intro 
 
 Spring에서 Apache Kafka를 효율적으로 사용하는 방법에 대해 정리합니다. 
@@ -212,7 +224,7 @@ Spring에서 Kafka를 이용해서 데이터를 보낼 땐 `KafkaTemplate` 을 �
 
 ***
 
-### Producer 에서 고려할 사항 
+## Producer 에서 고려할 사항 
 
 #### Blocking
 
@@ -288,7 +300,7 @@ Consumer의 내부에는 `fetcher` 와 `Coordinator` 가 있다.
 
 ***
 
-### Consumer 에서 고려할 사항 
+## Consumer 에서 고려할 사항 
 
 #### Rebalancing 
 
