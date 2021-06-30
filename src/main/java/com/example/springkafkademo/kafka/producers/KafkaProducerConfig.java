@@ -1,11 +1,8 @@
-package com.example.springkafkademo;
+package com.example.springkafkademo.kafka.producers;
 
 import com.example.springkafkademo.domain.User;
-import com.fasterxml.jackson.databind.ser.BeanSerializer;
 import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,6 +39,7 @@ public class KafkaProducerConfig {
         configProps.put(
                 ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
                 StringSerializer.class);
+
         return new DefaultKafkaProducerFactory<>(configProps);
     }
 

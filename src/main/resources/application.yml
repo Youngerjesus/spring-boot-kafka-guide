@@ -4,3 +4,9 @@ server:
 
 kafka:
   bootstrapAddress: localhost:9092
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true

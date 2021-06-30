@@ -1,4 +1,4 @@
-package com.example.springkafkademo;
+package com.example.springkafkademo.kafka.topics;
 
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
@@ -19,8 +19,6 @@ public class KafkaTopicConfig {
     @Value(value = "${kafka.bootstrapAddress}")
     private String bootstrapAddress;
 
-    private Logger logger = LoggerFactory.getLogger(KafkaTopicConfig.class);
-
     @Bean
     public KafkaAdmin admin() {
         Map<String, Object> configs = new HashMap<>();
@@ -30,7 +28,7 @@ public class KafkaTopicConfig {
 
     @Bean
     public NewTopic topic1() {
-        return TopicBuilder.name("yongwook")
+        return TopicBuilder.name("message")
                 .partitions(1)
                 .replicas(1)
                 .build();

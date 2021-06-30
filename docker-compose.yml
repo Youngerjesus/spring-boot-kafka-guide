@@ -8,7 +8,7 @@ services:
       - "2181:2181"
   kafka-1:
     image: wurstmeister/kafka
-    container_name: kafka
+    container_name: kafka-1
     restart: always
     depends_on:
       - zookeeper
@@ -22,7 +22,49 @@ services:
       KAFKA_ADVERTISED_PORT: 9092
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LOG_DIRS: /kafka/logs
-      KAFKA_BROKER_ID: 100
+      KAFKA_BROKER_ID: 1
       KAFKA_DELETE_TOPIC_ENABLE: 'true'
       KAFKA_ALLOW_AUTO_CREATE_TOPICS: 'false'
       KAFKA_offsets_topic_relication_factor: 1
+
+#  kafka-2:
+#    image: wurstmeister/kafka
+#    container_name: kafka-2
+#    restart: always
+#    depends_on:
+#      - zookeeper
+#    links:
+#      - zookeeper:zookeeper
+#    ports:
+#      - "19092:19092"
+#    environment:
+#      KAFKA_ADVERTISED_HOST_NAME: localhost
+#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:19092
+#      KAFKA_ADVERTISED_PORT: 19092
+#      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+#      KAFKA_LOG_DIRS: /kafka/logs
+#      KAFKA_BROKER_ID: 2
+#      KAFKA_DELETE_TOPIC_ENABLE: 'true'
+#      KAFKA_ALLOW_AUTO_CREATE_TOPICS: 'false'
+#      KAFKA_offsets_topic_relication_factor: 1
+#
+#  kafka-3:
+#    image: wurstmeister/kafka
+#    container_name: kafka-3
+#    restart: always
+#    depends_on:
+#      - zookeeper
+#    links:
+#      - zookeeper:zookeeper
+#    ports:
+#      - "29092:29092"
+#    environment:
+#      KAFKA_ADVERTISED_HOST_NAME: localhost
+#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:29092
+#      KAFKA_ADVERTISED_PORT: 29092
+#      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+#      KAFKA_LOG_DIRS: /kafka/logs
+#      KAFKA_BROKER_ID: 200
+#      KAFKA_DELETE_TOPIC_ENABLE: 'true'
+#      KAFKA_ALLOW_AUTO_CREATE_TOPICS: 'false'
+#      KAFKA_offsets_topic_relication_factor: 1

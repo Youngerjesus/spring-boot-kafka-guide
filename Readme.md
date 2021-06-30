@@ -2,9 +2,13 @@
 
 https://spring.io/projects/spring-kafka
 
+https://docs.confluent.io/platform/current/overview.html
+
+
 ***
 
 ## 목차
+
 [1. Intro](#Intro) <br/>
 [2. Kafka Cluster](#Kafka-Cluster) <br/>
 [3. Kafka Docker Container](#Kafka-Docker-Container) <br/>
@@ -15,63 +19,58 @@ https://spring.io/projects/spring-kafka
 [8. Consumer 에서 고려할 사항](#Consumer-에서-고려할-사항) <br/>
 
 ***
+
 ## Intro 
 
-Spring에서 Apache Kafka를 효율적으로 사용하는 방법에 대해 정리합니다. 
+Spring 에서 Apache Kafka 를 효율적으로 사용하는 방법에 대해 정리한다. 
 
-여기서 Kafka는 직접 설치하지 않고 컨테이너를 통해 실행시킵니다. 
+여기서 Kafka 는 직접 설치하지 않고 도커 컨테이너를 통해 실행시킨다.  
 
-Kafka에 대한 정의는 다음과 같습니다.
+카프카는 기본적으로 메시징 서버로 동작한다. 
 
-> Apache Kafka is an open-source distributed event streaming platform used by thousands of companies for high-performance data pipelines, streaming analytics, data integration, and mission-critical applications.
+메시지라고 불리는 데이터 단위를 보내는 측 Producer 에서 카프카에 토픽이라는 각각의 메시지 저장소에 데이터를 저장하면 
+가져가는 측 Consumer 가 원하는 토픽에서 데이터를 가져가게 되어있다. 
 
-카프카는 기본적으로 메시징 서버로 동작합니다. 
-
-따라서 카파카의 동작 방식을 설명하기 전에 메시징 시스템에 대해 좀 알아보자면 메시지라고 불리는 데이터 단위를 보내는 측 Producer에서 카프카에 토픽이라는 각각의 메시지 저장소에 데이터를 저장하면 
-
-가져가는 측 Consumer가 원하는 토픽에서 데이터를 가져가게 되어있습니다. 
-
-중앙에 메시징 시스템 서버를 두고 이렇게 메시지를 보내고 받는 형태의 통신을 Pub/Sub 모델이라고 한다.
 
 
 *** 
 
+![](image/broker-architecture.png)
 
-## Kafka Cluster
-
-Kafka 클러스터는 하나 이상의 Broker로 구성된다. 주로 하는 역할은 Broker의 Controller로서 역할을 한다. 
-
-#### Broker 
-
-Producer로 부터 들어온 메시지를 저장하고 Cosumer가 이 메시지를 topic 별로 각 patition에서 offset을 기준으로 fetch 할 수 있도록 한다. 
-
-이중화를 하고 장애에 대응하는 역할도 한다. 
-
+![](image/kafka-architecture.png)
 
 #### Zookeeper Cluster
 
-Zookeeper는 분산 시스템에서 서비스 동기화와 naming registry를 위해서 사용한다. 
+Zookeeper 는 분산 시스템에서 서비스 동기화와 naming registry 를 위해서 사용한다. 
 
-주로 하는 일은 Apache Kafka Cluster의 상태를 추적하고 관리하는 역할과 Kafka topic 및 message, 파티션들을 관리한다.
+주로 하는 일은 Apache Kafka Cluster 의 상태를 추적하고 관리하는 역할을 한다. 
 
-이외에도 Zookeeper는 모든 파티션에서 리더 팔로우 관계를 유지해주는 역할을 하도록 컨트롤러를 선택해주는 역할을 하기도 한다. 
+이외에도 Zookeeper 는 모든 파티션에서 리더 팔로우 관계를 유지해주는 역할을 하도록 컨트롤러를 선택해주는 역할을 하기도 한다. 
 
+#### Kafka Cluster
+
+Kafka 클러스터는 하나 이상의 Broker 로 구성된다. 주로 하는 역할은 Broker의 Controller 로서 역할을 한다. 
+
+#### Broker 
+
+Producer 로 부터 들어온 메시지를 저장하고 Consumer 가 이 메시지를 topic 별로 각 partition 에서 offset 을 기준으로 fetch 할 수 있도록 한다. 
+
+이중화를 하고 장애에 대응하는 역할도 한다. 
 
 #### Producer 
 
-데이터 스트림을 생산하는 역할을 producer가 합니다. 토큰 또는 메시지를 생성하고 이를 Kafka 클러스터의 하나 이상의 topic에 추가로 append 하기 위해 Apache Kafka Producer를 사용합니다
-
+데이터 스트림을 생산하는 역할을 producer 가 합니다. 토큰 또는 메시지를 생성하고 이를 Kafka 클러스터의 하나 이상의 topic 에 추가로 append 하기 위해 Apache Kafka Producer 를 사용합니다
 
 #### Consumer 
 
-Consumer는 Consumer Group에 속해서 topic을 subscribe 하고 해당 topic에 있는 partition에 데이터가 들어있다면 그 데이터를 가지고 오는 역할을 합니다. 
+Consumer 는 Consumer Group 에 속해서 topic 을 subscribe 하고 해당 topic 에 있는 partition 에 데이터가 들어있다면 그 데이터를 가지고 오는 역할을 합니다. 
 
 
-#### Topic과 partition
+#### Topic 과 partition
 
-카프카에서 Producer가 보내는 메세지는 topic으로 분류되고, topic은 여러개의 파티션으로 나눠 질 수 있다. 
+카프카에서 Producer 가 보내는 메세지는 topic 으로 분류되고, topic 은 여러개의 파티션으로 나눠 질 수 있다. 
 
-파티션내의 한 칸은 로그라고 불린다. 데이터는 한 칸의 로그에 순차적으로 append된다. 
+파티션내의 한 칸은 로그라고 불린다. 데이터는 한 칸의 로그에 순차적으로 append 된다. 
 
 메세지의 상대적인 위치를 나타내는게 offset이다. 배열에서의 index를 생각하면 된다. 
 
@@ -98,7 +97,7 @@ $ docker compose up -d
 $ docker compose down 
 ```
 
-##### Run a command in a running container
+##### Run a command to access  a running container
       
 ```
 $ docker exec -it kafka bash 
@@ -108,7 +107,7 @@ $ docker exec -it kafka bash
 
 ### Kafka Shell Script 
 
-Container에 접속 후 /opt/kafka/bin 경로에 카프카 shell script 있음 (wurstmeister/kafka 이미지 기준)
+Container 에 접속 후 /opt/kafka/bin 경로에 카프카 shell script 있음 (wurstmeister/kafka 이미지 기준)
 
 - **kafka-topics.sh**
   - 토픽 생성, 조회, 수정 등 역할
@@ -134,7 +133,7 @@ Container에 접속 후 /opt/kafka/bin 경로에 카프카 shell script 있음 (
 
 ***
 
-### Kafka Broker
+### Kafka Broker 파티션에 데이터 저장
 
 브로커에선 파티션 하나에 대한 데이터를 한 파일에다가 저장하는게 아니라 `segment`  로 나눠서 저장을 한다. 
 
@@ -205,12 +204,15 @@ retention 시간 값을 정확히 72로 고정시킨 이유는 일의 라이프 
 
 ## Kafka Producer 
 
-Producer는 메세지를 생산하는 주체이다. 메세지를 만들고 Topic에 메세지를 쓴다. 
+Producer 는 메세지를 생산하는 주체이다. 메세지를 만들고 Topic 에 메세지를 쓴다. 
 
 특정 메세지들을 분류해서 특정 파티션에 저장하고 싶다면, key 값을 통해서 분류해서 넣을 수 있다. 
 
 Kafka Producer 노드의 구조에는 `Accumulator` 와 `Network Thread` 를 가지고 있다.
 
+`Accumulator` 는 메시지를 브로커에 있는 파티션에게 보내기 위한 큐라고 생각하면 되고 `Network Thread` 는 파티션에게 보내주는 역할을
+하는 스레드라고 생각하면 된다. 
+ 
 `Accumulator` 는 데이터를 `broker`에 보내는 `send()` 메소드를 호출할 때 레코드를 메모리에 쌓아두는 역할을 한다
 
 `Accumulator` 에는 토픽 파티션마다 레코드들을 쌓을 수 있는 공간이 있다. 이걸 `RecordBatch` 라고 하며  `record` 를 총 쌓을 수 있는 공간이  `buffer.memory` 이다. 
@@ -218,7 +220,9 @@ Kafka Producer 노드의 구조에는 `Accumulator` 와 `Network Thread` 를 가
 `Network Thread` 는 `Accumulator` 에 쌓인 `RecordBatch` 를 `Broker` 에 전달해주는 역할을 한다. 즉 레코드 한 건마다 보내는게 아니라 배치 작업을 한다. 
 `batch.size` 옵션을 통해 `RecordBatch` 사이즈를 결정한다.
  
-Spring에서 Kafka를 이용해서 데이터를 보낼 땐 `KafkaTemplate` 을 이용해서 보내면 된다.
+`batch.num.messages` 를 사용하여 각 배치에 포함된 메시지 수에 대한 제한을 설정하는 것도 가능하다.
+
+Spring 에서 Kafka 를 이용해서 데이터를 보낼 땐 `KafkaTemplate` 을 이용해서 보내면 된다.
 
 추상화를 잘 해놔서 데이터를 보낼 때 동기식으로 보낼지 비동기식으로 보낼지 결정하지 않아도 된다.  
 
@@ -238,6 +242,9 @@ Blocking 이슈는 내가 `Network Thread` 로 계속해서 메시지를 브로�
 
 이런 `Exception` 을 받아서 따로 처리할 수 있는 로직에 대해서는 좀 더 리서치가 필요하다. 
 
+그리고 `request.timeout.ms` 시간 설정을 통해서 메시지가 Accumulator 에 무기한 대기 하지 않도록 한다. 저 시간동안 
+메시지가 보내지지 않으면 대기열에서 제외되고 예외가 발생한다.     
+
 
 #### Batching and Compression
  
@@ -245,16 +252,14 @@ Blocking 이슈는 내가 `Network Thread` 로 계속해서 메시지를 브로�
  
 하나하나씩 데이터를 보내는게 아니라 `max.request.size` 만큼의 크기를 한 번에 `Network Thread` 가 보낼 수 있다. 
 
-Compression은 `compression.type`에 따라 활성화 할 수 있다. 압축은 배치가 클수록 효율이 높다.
+Compression 은 `compression.type`에 따라 활성화 할 수 있다. 압축은 배치가 클수록 효율이 높다.
 
 그리고 snappy 압축을 사용할려면 /tmp 디렉토리에 대한 쓰기 엑세스 권한이 필요하다.
-
-`batch.num.messages` 를 사용하여 각 배치에 포함된 메시지 수에 대한 제한을 설정하는 것도 가능하다.
 
 
 #### Message Ordering
 
-일반적으로 브로커에 메시지가 쌓이는 순서는 Producer가 메시지 보내는 순서와 같다. 
+일반적으로 브로커에 메시지가 쌓이는 순서는 Producer 가 메시지 보내는 순서와 같다. 
 
 하지만 메시지가 네트워크 상에 유실이되서 다시 재전송을 해야한다면 메시지 순서가 바뀔 수 있다. 
 
@@ -265,7 +270,7 @@ Compression은 `compression.type`에 따라 활성화 할 수 있다. 압축은 
 
 #### Message Loss 
 
-마지막으로 메시지 손실에 대한 고가용성 설정을 `Acks`를 통헤 Producer에서 할 수 있다.
+마지막으로 메시지 손실에 대한 고가용성 설정을 `Acks`를 통헤 Producer 에서 할 수 있다.
   
 acks는 acknowledgments의 약자로 사전에서 찾아 보면 "승인"이라는 뜻을 가지고 있는데, 여기에서 개념을 이해하기 위해 "확인"이라는 뜻으로 이해하면 좋을 것 같다.
  
@@ -286,13 +291,16 @@ acks는 acknowledgments의 약자로 사전에서 찾아 보면 "승인"이라�
 ***
 
 ## Kafka Consumer 
-Consumer는 소비자로써 메세지를 소비하는 주체이다. 해당 topic을 구독함으로써, 자기가 처리할 수 있는 량을 스스로 조절해가면서 소비할 수 있다. 
+Consumer 는 소비자로써 메세지를 소비하는 주체이다. 해당 topic 을 구독함으로써, 자기가 처리할 수 있는량을 스스로 조절해가면서 소비할 수 있다. 
 
-소비를 했다는 표시는 해당 topic내의 각 파티션에 존재하는 offset의 위치를 통해서 이전에 소비했던 offset 위치를 기억하고 관리한다. 
+소비를 했다는 표시는 해당 topic 내의 각 파티션에 존재하는 offset 의 위치를 통해서 이전에 소비했던 offset 위치를 기억하고 관리한다. 
 
-이를 통해서, 혹시나 Consumer가 죽었다가 다시 살아나도, 전에 마지막으로 읽었던 위치에서 부터 다시 읽어들일 수 있다.
+이를 통해서, 혹시나 Consumer 가 죽었다가 다시 살아나도, 전에 마지막으로 읽었던 위치에서 부터 다시 읽어들일 수 있다.
 
-Consumer의 내부에는 `fetcher` 와 `Coordinator` 가 있다.
+Consumer 는 Consumer Group 에 항상 속하고 같은 그룹에 있는 Consumer 는 파티션을 공유하지 않는다. 그러므로 Consumer 수가 Partition 수보다 많으면 
+놀고있는 Consumer 가 있다는 뜻이다. 
+
+Consumer 의 내부에는 `fetcher` 와 `Coordinator` 가 있다.
  
 `fetcher` 는 사용자가 `poll()` 함수를 호출해 내부에 있는 레코드를 요청하고 레코드가 없다면 `Broker` 로 요청해 레코드를 가지고 오는 역할을 한다. 
 
@@ -306,7 +314,7 @@ Consumer의 내부에는 `fetcher` 와 `Coordinator` 가 있다.
 
 #### Rebalancing 
 
-Consumer에선 리밸런스가 일어날 수 있는 이슈에 대해서 알아야 한다. 
+Consumer 에선 리밸런스가 일어날 수 있는 이슈에 대해서 알아야 한다. 
 
 `session.timeout.ms` 설정동안 Consumer가 Broker에게 하트비트를 날리지 않는다면 Consumer가 죽은 줄 알고 리밸런싱을 한다 
 
@@ -322,13 +330,13 @@ Consumer에선 리밸런스가 일어날 수 있는 이슈에 대해서 알아�
 
 `fetch.max.wait.ms` 설정으로 브로커에서 메시지가 쌓일 때까지 기다리는 시간을 설정할 수 있다.
 
-마지막으로 Consumer의 수가 토픽 파티션의 수보다 많으면 놀고 있는 컨슈머가 생길 수 있다. 
+마지막으로 Consumer 의 수가 토픽 파티션의 수보다 많으면 놀고 있는 컨슈머가 생길 수 있다. 
 
 #### Commit 
 
-KafkaConsumer는 `thread-safe` 하지 않다. 이 말은 오프셋과 관련있는데 `내가 어띠까지 데이터를 읽었지?` 라는 기록에 대한 것이다. 
+KafkaConsumer 는 `thread-safe` 하지 않다. 이 말은 오프셋과 관련있는데 `내가 어디까지 데이터를 읽었지?` 라는 기록에 대한 것이다. 
 
-이런 상태는 `Consumer` 끼리 공유할 수 있으므로 Consumer는 안전하게 멀티 스레드 환경에서의 프로그래밍을 해줘야 한다.
+이런 상태는 `Consumer` 끼리 공유할 수 있으므로 Consumer 는 안전하게 멀티 스레드 환경에서의 프로그래밍을 해줘야 한다.
  
 일반적으로 카프카에서 오프셋을 관리할 때 `enable.auto.commit=true` 를 설정하면 자동으로 커밋을 한다. 이 경우 `auto.commit.interval.ms` 이 시간 간격동안 자동으로 커밋을 한다.
  
