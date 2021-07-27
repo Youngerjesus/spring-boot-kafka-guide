@@ -9,14 +9,21 @@ https://docs.confluent.io/platform/current/overview.html
 
 ## 목차
 
-[1. Intro](#Intro) <br/>
-[2. Kafka Cluster](#Kafka-Cluster) <br/>
-[3. Kafka Docker Container](#Kafka-Docker-Container) <br/>
-[4. Kafka Cluster 주요 설정](#Kafka-Cluster-주요-설정) <br/>
-[5. Kafka Producer](#Kafka-Producer) <br/> 
-[6. Producer 에서 고려할 사항](#Producer-에서-고려할-사항) <br/>
-[7. Kafka Consumer](#Kafka-Consumer) <br/>
-[8. Consumer 에서 고려할 사항](#Consumer-에서-고려할-사항) <br/>
+- [Intro](#Intro)
+
+- [Kafka Cluster](#Kafka-Cluster)
+
+- [Kafka Docker Container](#Kafka-Docker-Container)
+
+- [Kafka Cluster 주요 설정](#Kafka-Cluster-주요-설정)
+
+- [Kafka Producer](#Kafka-Producer)
+
+- [Producer 에서 고려할 사항](#Producer-에서-고려할-사항)
+
+- [Kafka Consumer](#Kafka-Consumer)
+
+- [Consumer 에서 고려할 사항](#Consumer-에서-고려할-사항)
 
 ***
 
