@@ -1,7 +1,5 @@
 # Spring Boot Kafka Guide
 
-https://spring.io/projects/spring-kafka
-
 https://docs.confluent.io/platform/current/overview.html
 
 
